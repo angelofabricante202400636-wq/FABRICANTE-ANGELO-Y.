@@ -14,17 +14,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 const students = [
   {
     id: 1,
-    name: 'nigger1 ',
+    name: 'student1 ',
     yearLevel: 1,
   },
   {
     id: 2,
-    name: 'nigger2 ',
+    name: 'student2 ',
     yearLevel: 2,
   },
   {
     id: 3,
-    name: 'nigger3 ',
+    name: 'student3 ',
     yearLevel: 3,
   },
 ];
@@ -32,6 +32,17 @@ const students = [
 //API endpoint
 app.get('/api/students', (req, res) => {
   res.json(students);
+})
+// ADD NEW STUDENT
+app.post('/api/students', (req, res) => {
+    const {name, yearLevel} = req.body
+    const newStudent = {name, yearLevel}
+    students.push(newStudent)
+
+    res.status(201).json({
+      message: "Student added successfully",
+      student: newStudent
+    });
 });
 
 //Listen for incoming request

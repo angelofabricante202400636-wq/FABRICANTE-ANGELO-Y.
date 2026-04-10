@@ -10,6 +10,12 @@
     <h1>Students</h1>
     <button onclick="loadStudents()">Display Students</button>
     <ul id="list"></ul>
+
+    <h1>ADD STUDENT</h1>
+    <input type="text" id ="name"  name ="name" placeholder="name"/>
+    <input type="number" id= "yearLevel" name ="yearLevel" placeholder="yearLevel"/>
+    <button onclick="addStudents()">Submit</button>
+
   </body>
   <script>
     async function loadStudents() {
@@ -21,9 +27,28 @@
 
       data.forEach((student) => {
         const li = document.createElement('li');
-        li.textContent = `NAME: ${student.name} \n YEAR LEVEL: ${student.yearLevel}`;
+        li.innerHTML = `NAME: ${student.name} <br> YEAR LEVEL: ${student.yearLevel}`;
         list.appendChild(li);
       });
     }
+
+    async function addStudents(){
+      const name = document.getElementById('name').value
+      const yearLevel = document.getElementById('yearLevel').value
+      const res = await fetch(`http://localhost:3000/api/students`,
+    {
+      method: 'POST',
+      headers: {
+          'Content-Type':'application/json'
+      }, 
+      body: JSON.stringify({name, yearLevel})
+    })
+    const data = await res.json()
+  console.log(data)
+  loadStudents()
+  }
+
+
+
   </script>
 </html>
