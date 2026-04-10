@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Students</h1>
+    <button onclick="loadStudents()">Display Students</button>
+    <ul id="list"></ul>
+  </body>
+  <script>
+    async function loadStudents() {
+      const res = await fetch(`http://localhost:3000/api/students`);
+      const data = await res.json();
+
+      const list = document.getElementById('list');
+      list.innerHTML = '';
+
+      data.forEach((student) => {
+        const li = document.createElement('li');
+        li.textContent = `NAME: ${student.name} \n YEAR LEVEL: ${student.yearLevel}`;
+        list.appendChild(li);
+      });
+    }
+  </script>
+</html>
