@@ -4,26 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Inventory</title>
-  <style>
-    body { font-family: Arial; margin: 20px; }
-    li { margin-bottom: 10px; }
-    input { margin: 5px; }
-    button { margin-left: 5px; }
-  </style>
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <h1>Products</h1>
+  <h1>Product Inventory</h1>
+
   <button id="loadBtn">Display Products</button>
+
   <ul id="list"></ul>
 
   <h2>Add Product</h2>
-  <input type="text" id="name" placeholder="Name">
-  <input type="text" id="category" placeholder="Category">
-  <input type="number" id="price" placeholder="Price">
+  <div class="form-group">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="category" placeholder="Category">
+    <input type="number" id="price" placeholder="Price">
+  </div>
   <button id="addBtn">Submit</button>
 
   <h2>Search Product</h2>
-  <input type="text" id="searchName" placeholder="Search by name">
+  <div class="form-group">
+    <input type="text" id="searchName" placeholder="Search by name">
+  </div>
   <button id="searchBtn">Search</button>
 
   <script>
@@ -41,7 +42,11 @@
 
       data.forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+        li.innerHTML = `
+          <strong>${p.name}</strong><br>
+          Category: ${p.category}<br>
+          Price: ₱${p.price}
+        `;
 
         const delBtn = document.createElement('button');
         delBtn.textContent = 'Delete';
@@ -79,7 +84,11 @@
       list.innerHTML = '';
       data.forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+        li.innerHTML = `
+          <strong>${p.name}</strong><br>
+          Category: ${p.category}<br>
+          Price: ₱${p.price}
+        `;
 
         const delBtn = document.createElement('button');
         delBtn.textContent = 'Delete';
