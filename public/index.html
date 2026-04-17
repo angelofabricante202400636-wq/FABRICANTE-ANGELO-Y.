@@ -8,6 +8,7 @@
     body { font-family: Arial; margin: 20px; }
     li { margin-bottom: 10px; }
     input { margin: 5px; }
+    button { margin-left: 5px; }
   </style>
 </head>
 <body>
@@ -26,7 +27,7 @@
   <button id="searchBtn">Search</button>
 
   <script>
-    const API_URL = '/api/products'; // relative path works because server serves frontend
+    const API_URL = '/api/products'; 
 
     const list = document.getElementById('list');
     const loadBtn = document.getElementById('loadBtn');
@@ -37,9 +38,16 @@
       const res = await fetch(API_URL);
       const data = await res.json();
       list.innerHTML = '';
+
       data.forEach(p => {
         const li = document.createElement('li');
-        li.textContent = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: ₱${p.price}`;
+        li.innerHTML = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => deleteProduct(p.id));
+        li.appendChild(delBtn);
+
         list.appendChild(li);
       });
     }
@@ -71,9 +79,23 @@
       list.innerHTML = '';
       data.forEach(p => {
         const li = document.createElement('li');
-        li.textContent = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+        li.innerHTML = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+
+        const delBtn = document.createElement('button');
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => deleteProduct(p.id));
+        li.appendChild(delBtn);
+
         list.appendChild(li);
       });
+    }
+
+    async function deleteProduct(id) {
+      const confirmed = confirm('Are you sure you want to delete this product?');
+      if (!confirmed) return;
+
+      await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      loadProducts();
     }
 
     loadBtn.addEventListener('click', loadProducts);
