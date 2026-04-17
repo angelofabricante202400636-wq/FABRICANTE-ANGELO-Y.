@@ -1,54 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>Students</h1>
-    <button onclick="loadStudents()">Display Students</button>
-    <ul id="list"></ul>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Inventory</title>
+  <style>
+    body { font-family: Arial; margin: 20px; }
+    li { margin-bottom: 10px; }
+    input { margin: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Products</h1>
+  <button id="loadBtn">Display Products</button>
+  <ul id="list"></ul>
 
-    <h1>ADD STUDENT</h1>
-    <input type="text" id ="name"  name ="name" placeholder="name"/>
-    <input type="number" id= "yearLevel" name ="yearLevel" placeholder="yearLevel"/>
-    <button onclick="addStudents()">Submit</button>
+  <h2>Add Product</h2>
+  <input type="text" id="name" placeholder="Name">
+  <input type="text" id="category" placeholder="Category">
+  <input type="number" id="price" placeholder="Price">
+  <button id="addBtn">Submit</button>
 
-  </body>
+  <h2>Search Product</h2>
+  <input type="text" id="searchName" placeholder="Search by name">
+  <button id="searchBtn">Search</button>
+
   <script>
-    async function loadStudents() {
-      const res = await fetch(`http://localhost:3000/api/students`);
+    const API_URL = '/api/products'; // relative path works because server serves frontend
+
+    const list = document.getElementById('list');
+    const loadBtn = document.getElementById('loadBtn');
+    const addBtn = document.getElementById('addBtn');
+    const searchBtn = document.getElementById('searchBtn');
+
+    async function loadProducts() {
+      const res = await fetch(API_URL);
       const data = await res.json();
-
-      const list = document.getElementById('list');
       list.innerHTML = '';
-
-      data.forEach((student) => {
+      data.forEach(p => {
         const li = document.createElement('li');
-        li.innerHTML = `NAME: ${student.name} <br> YEAR LEVEL: ${student.yearLevel}`;
+        li.textContent = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: ₱${p.price}`;
         list.appendChild(li);
       });
     }
 
-    async function addStudents(){
-      const name = document.getElementById('name').value
-      const yearLevel = document.getElementById('yearLevel').value
-      const res = await fetch(`http://localhost:3000/api/students`,
-    {
-      method: 'POST',
-      headers: {
-          'Content-Type':'application/json'
-      }, 
-      body: JSON.stringify({name, yearLevel})
-    })
-    const data = await res.json()
-  console.log(data)
-  loadStudents()
-  }
+    async function addProduct() {
+      const name = document.getElementById('name').value;
+      const category = document.getElementById('category').value;
+      const price = document.getElementById('price').value;
 
+      if (!name || !category || !price) { alert('Fill all fields!'); return; }
 
+      await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, category, price })
+      });
 
+      document.getElementById('name').value = '';
+      document.getElementById('category').value = '';
+      document.getElementById('price').value = '';
+      loadProducts();
+    }
+
+    async function searchProduct() {
+      const name = document.getElementById('searchName').value;
+      if (!name) return;
+      const res = await fetch(`${API_URL}/search?name=${name}`);
+      const data = await res.json();
+      list.innerHTML = '';
+      data.forEach(p => {
+        const li = document.createElement('li');
+        li.textContent = `ID: ${p.id} | Name: ${p.name} | Category: ${p.category} | Price: $${p.price}`;
+        list.appendChild(li);
+      });
+    }
+
+    loadBtn.addEventListener('click', loadProducts);
+    addBtn.addEventListener('click', addProduct);
+    searchBtn.addEventListener('click', searchProduct);
   </script>
+</body>
 </html>
